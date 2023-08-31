@@ -3,11 +3,11 @@ package Toy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Repository {
+public class ToyRepository {
     List<Toy> toys;
 
 
-    public Repository() {
+    public ToyRepository() {
         this.toys = new ArrayList<>();
     }
 

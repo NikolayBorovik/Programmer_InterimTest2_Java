@@ -17,10 +17,10 @@ public class Presenter {
 
     private final UserMapper mapper;
 
-    public Presenter(View view) {
+    public Presenter(View view, String path) {
         this.view = view;
         this.lottery = new Lottery();
-        this.awarding = new Awarding(lottery);
+        this.awarding = new Awarding(lottery, path);
         this.mapper = new UserMapper();
     }
 
@@ -55,77 +55,53 @@ public class Presenter {
         int weight = Integer.parseInt(lines[2]);
         int count = Integer.parseInt(lines[3]);
 
-        String toyType = view.getMessage("Enter a type of the toy you'd like to create (1 - teddybear, " +
-                "2 - woodencar, 3 - barbie): ");
-
-        done = false;
-        while(!done){
-            if(mapper.isDigit(toyType)){
-                switch (Integer.parseInt(toyType)) {
-                    case 1 -> {
-                        TeddyBear toy = new TeddyBear(id, name, weight, count);
-                        lottery.repository.addToy(toy);
-                        view.printMessage("The toy " + toy.getName() + " successfully added!");
+        switch (id) {
+            case 1 -> {
+                TeddyBear toy = new TeddyBear(name, weight, count);
+                lottery.repository.addToy(toy);
+                view.printMessage("The toy " + toy.getName() + " successfully added!");
+                done = true;
+                String more = view.getMessage("Add another toy? (1 - yes 2 - no): ");
+                switch(more){
+                    case "1":
+                        addToyToLottery();
+                        break;
+                    case "2":
                         done = true;
-                        String more = view.getMessage("Add another toy? (1 - yes 2 - no): ");
-                        switch(more){
-                            case "1":
-                                addToyToLottery();
-                                break;
-                            case "2":
-                                done = true;
-                                break;
-                        }
-                    }
-                    case 2 -> {
-                        Toy toy = new WoodenCar(id, name, weight, count);
-                        lottery.repository.addToy(toy);
-                        view.printMessage("The toy " + toy.getName() + " successfully added!");
-                        done = true;
-                        String more = view.getMessage("Add another toy? (1 - yes 2 - no): ");
-                        switch(more){
-                            case "1":
-                                addToyToLottery();
-                                break;
-                            case "2":
-                                done = true;
-                                break;
-                        }
-                    }
-
-                    case 3 -> {
-                        Toy toy = new Barbie(id, name, weight, count);
-                        lottery.repository.addToy(toy);
-                        view.printMessage("The toy " + toy.getName() + " successfully added!");
-                        done = true;
-                        String more = view.getMessage("Add another toy? (1 - yes 2 - no): ");
-                        switch(more){
-                            case "1":
-                                addToyToLottery();
-                                break;
-                            case "2":
-                                done = true;
-                                break;
-                        }
-                    }
-                    default -> {
-                        view.printMessage("Wrong entry. def ");
-                        toyType = view.getMessage("Enter a type of the toy you'd like to create (1 - teddybear, " +
-                                "2 - woodcar, 3 - barbie): ");
-                    }
+                        break;
                 }
             }
-            else{
-                view.printMessage("Wrong entry. else");
-                toyType = view.getMessage("Enter a type of the toy you'd like to create (1 - teddybear, " +
-                        "2 - woodcar, 3 - barbie): ");
+            case 2 -> {
+                Toy toy = new WoodenCar(name, weight, count);
+                lottery.repository.addToy(toy);
+                view.printMessage("The toy " + toy.getName() + " successfully added!");
+                done = true;
+                String more = view.getMessage("Add another toy? (1 - yes 2 - no): ");
+                switch (more) {
+                    case "1" -> addToyToLottery();
+                    case "2" -> done = true;
+                }
             }
 
+            case 3 -> {
+                Toy toy = new Barbie(name, weight, count);
+                lottery.repository.addToy(toy);
+                view.printMessage("The toy " + toy.getName() + " successfully added!");
+                done = true;
+                String more = view.getMessage("Add another toy? (1 - yes 2 - no): ");
+                switch (more) {
+                    case "1" -> addToyToLottery();
+                    case "2" -> done = true;
+                }
+            }
+            default -> {
+                throw new IllegalArgumentException();
+            }
         }
     }
 
     private boolean checkFields(String str){
-        return mapper.stringParse(str);
+        return mapper.validToyString(str);
     }
 
     public void awardCollected (Toy toy){
@@ -173,5 +149,9 @@ public class Presenter {
         for (Toy item: toys) {
             System.out.println(item);
         }
+    }
+
+    public void saveCollected(){
+        awarding.save();
     }
 }

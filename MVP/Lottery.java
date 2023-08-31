@@ -3,13 +3,13 @@ package MVP;
 import java.util.List;
 
 import Toy.Toy;
-import Toy.Repository;
+import Toy.ToyRepository;
 
 public class Lottery {
-    Repository repository;
+    ToyRepository repository;
 
     public Lottery() {
-        this.repository = new Repository();
+        this.repository = new ToyRepository();
     }
 
     public Toy hold(List<Toy> toys) {

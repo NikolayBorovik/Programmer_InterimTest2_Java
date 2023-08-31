@@ -6,8 +6,8 @@ public abstract class Toy {
     protected int count;
     protected int weight;
 
-    public Toy(int id, String name, int count, int weight) {
-        this.id = id;
+    public Toy(String name, int count, int weight) {
+
         this.name = name;
         this.count = count;
         this.weight = weight;

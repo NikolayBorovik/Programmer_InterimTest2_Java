@@ -3,8 +3,9 @@ package Toy;
 import Toy.Toy;
 
 public class WoodenCar extends Toy {
-    public WoodenCar(int id, String name, int count, int weight) {
-        super(id, name, count, weight);
+    public WoodenCar(String name, int count, int weight) {
+        super(name, count, weight);
+        this.id = 2;
     }
 
 
